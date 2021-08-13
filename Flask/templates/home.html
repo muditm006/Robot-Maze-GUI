@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SCRUMptious, LLC. &#169</title>
+</head>
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script>
+  // javascript to obtain the logging output and send it back to the log_stream
+  function callButton(link, id) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", link, true);
+    xhttp.send();
+    var output = document.getElementById('output');
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', '{{ url_for('log_stream') }}', true);
+          xhr.send();
+          xhr.onload = function () {
+            output.textContent = xhr.responseText;
+          };
+  }
+</script>
+<style>
+     /* creates the quadrants for our webpage */
+    html, body { height:100%; margin:0; padding:0 }
+    div { position:fixed; border: 1px solid #000; border-color: black; width:50%; height:50% }
+    #NW { top:0;   left:0   }
+    #NE { top:0;   left:50%; }
+    #SW { top:50%; left:0;   }
+    #SE { top:50%; left: 50% }
+    .grid {
+        display: flex;                       
+        flex-wrap: wrap;                     
+        justify-content: space-around;
+        left: 0%;
+        top: 50%;
+       }
+
+/* Creates the buttons and positions them   */
+.btn-group {
+          flex: 0 0 32%;
+          background-color: #d93ddb; 
+          border: 1px solid black;
+          color: white; 
+          padding: 10px 24px;
+          cursor: pointer;
+          float: none; 
+          font-size: 50px;
+          box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+          font-family: calibri;
+          width: 33%;
+          height: 33%;
+          <!--resize: horizontal;-->
+          overflow: auto;
+          position: absolute;
+        }
+
+        .btn-fwd {
+            left: 33%;
+           }
+
+        .btn-rev {
+            left: 33%;
+            top: 66%;
+           }
+
+        .btn-left {
+            top: 33%;
+            left:0%
+           }
+
+        .btn-right {
+            left: 66%;
+            top: 33%;
+           }
+
+        .btn-play {
+            left: 33%;
+            top: 33%;
+           }
+
+    .btn-group button:not(:last-child) {
+      border-right: none; 
+    }
+
+    .btn-group:after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+
+    .btn-group button:hover {
+      background-color: #1cd6eb;
+    }
+
+/* Creates the logging window */
+    .logging_window{
+    display: block;
+    padding: 9.5px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #333;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 50%;
+    height: 50%;
+    margin: auto;
+    left: 50%;
+    top: 0%;
+    /* Figure this out: scroll-snap-type: y mandatory; */
+    }
+
+
+</style>
+<body>
+    <!-- gets the stream from pwp and outputs it to the NW quadrant -->
+    <div id="NW"></div>
+      <img src="{{ url_for('video_feed') }}" width="50%" height="50%">
+    <div id="NE"></div>
+        <div class="logging_window">
+          <pre id="output"></pre>
+        </div> 
+      </div>
+    <div id="SE">
+      <h1 >NAV CONTROL by SCRUMptious Holdings, LLC.</h1>
+    </div>​
+    <div id="SW"></div>
+      <!-- outputs the buttons and assigns the pwp functions to them  -->
+        <div class="grid">
+        <button class="btn-group btn-fwd" type="button" id="fwd" onclick="callButton('{{ url_for('fwd') }}', 'fwd')">Forward</button>
+        <button class="btn-group btn-left" type="button" id="left" onclick="callButton('{{ url_for('left') }}', 'left')">Left</button>
+        <button class="btn-group btn-play">Play</button>
+        <button class="btn-group btn-right" type="button" id="right" onclick="callButton('{{ url_for('right') }}', 'right')">Right</button>
+        <button class="btn-group btn-rev" type="button" id="rev" onclick="callButton('{{ url_for('rev') }}', 'rev')">Reverse</button>
+        </div>
+</body>
+</html>
